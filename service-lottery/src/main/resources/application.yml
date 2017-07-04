@@ -1,0 +1,30 @@
+spring:
+  datasource:
+    stone:
+      hikari:
+        pool-name: stone
+        username: root
+        password: 123456
+        url: jdbc:mysql://localhost:3306/stone?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&useSSL=false
+        cache-prep-stmts: true
+        prep-stmt-cache-size: 250
+        prep-stmt-cache-sql-limit: 2048
+        minimum-idle: 10
+        maximum-pool-size: 30
+        idle-timeout: 600000
+        connection-timeout: 30000
+        max-lifetime: 1800000
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+        hbm2ddl:
+          auto: update
+
+  data:
+    rest:
+      basePath: /repo
+    mongodb:
+      host: 127.0.0.1
+      port: 27017
+      database: test

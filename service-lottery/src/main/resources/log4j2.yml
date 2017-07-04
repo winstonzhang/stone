@@ -1,0 +1,118 @@
+Configuration:
+  status: warn
+  name: stone
+
+  Properties:
+    Property:
+      name: log.path
+      value: /home/logs/stone
+
+  Appenders:
+    Console:
+      name: console
+      target: SYSTEM_OUT
+      PatternLayout:
+        pattern: "[%d{HH:mm:ss:SSS}] [%p] - %l - %m%n"
+
+    RandomAccessFile:
+      name: system
+      fileName: ${log.path}/system.log
+      append: false
+      PatternLayout:
+        Pattern: "%d{HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%xEx%n"
+
+    RollingRandomAccessFile:
+      - name: debug
+        fileName: ${log.path}/debug.log
+        filePattern: "${log.path}/$${date:yyyy-MM}/debug-%d{yyyy-MM-dd}-%i.log.gz"
+        ThresholdFilter:
+          level: DEBUG
+          onMatch: ACCEPT
+          onMismatch: DENY
+        PatternLayout:
+          pattern: "[%d{HH:mm:ss:SSS}] [%p] - %l - %m%n"
+        Policies:
+          SizeBasedTriggeringPolicy:
+            size: 100MB
+
+      - name: info
+        fileName: ${log.path}/info.log
+        filePattern: "${log.path}/$${date:yyyy-MM}/info-%d{yyyy-MM-dd}-%i.log.gz"
+        ThresholdFilter:
+          level: INFO
+          onMatch: ACCEPT
+          onMismatch: DENY
+        PatternLayout:
+          pattern: "[%d{HH:mm:ss:SSS}] [%p] - %l - %m%n"
+        Policies:
+          SizeBasedTriggeringPolicy:
+            size: 100MB
+
+      - name: warn
+        fileName: ${log.path}/warn.log
+        filePattern: "${log.path}/$${date:yyyy-MM}/warn-%d{yyyy-MM-dd}-%i.log.gz"
+        ThresholdFilter:
+          level: WARN
+          onMatch: ACCEPT
+          onMismatch: DENY
+        PatternLayout:
+          pattern: "[%d{HH:mm:ss:SSS}] [%p] - %l - %m%n"
+        Policies:
+          SizeBasedTriggeringPolicy:
+            size: 100MB
+        DefaultRolloverStrategy:
+          max: 20
+
+      - name: error
+        fileName: ${log.path}/error.log
+        filePattern: "${log.path}/$${date:yyyy-MM}/error-%d{yyyy-MM-dd}-%i.log.gz"
+        ThresholdFilter:
+          level: ERROR
+          onMatch: ACCEPT
+          onMismatch: DENY
+        PatternLayout:
+          pattern: "[%d{HH:mm:ss:SSS}] [%p] - %l - %m%n"
+        Policies:
+          SizeBasedTriggeringPolicy:
+            size: 100MB
+
+    NoSql:
+      name: mongo
+      MongoDb:
+        databaseName: test
+        collectionName: log
+        server: 127.0.0.1
+        port: 27017
+
+#    SMTP:
+#      name: mail
+#      subject: error log
+#      to: windowzhang2012@163.com
+#      from: 673436552@qq.com
+#      smtpHost: localhost
+#      smtpPort: 25
+#      bufferSize: 50
+
+  Loggers:
+    Logger:
+      - name: org.springframework
+        level: INFO
+        additivity: false
+      - name: org.hibernate
+        level: INFO
+        additivity: false
+      - name: com.mongodb
+        level: INFO
+        additivity: false
+
+    Root:
+      level: debug
+      includeLocation: true
+      AppenderRef:
+        - ref: console
+        - ref: system
+        - ref: debug
+        - ref: info
+        - ref: warn
+        - ref: error
+#        - ref: mongo
